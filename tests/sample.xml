@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog version="2">
+    <name>Test Catalog</name>
+    <item id="1">
+        <title>Widget</title>
+        <price>9.99</price>
+        <quantity>100</quantity>
+        <available>true</available>
+        <tag>hardware</tag>
+        <tag>sale</tag>
+    </item>
+    <item id="2">
+        <title>Gadget</title>
+        <price>24.50</price>
+        <quantity>50</quantity>
+        <available>false</available>
+    </item>
+</catalog>

@@ -1,0 +1,14 @@
+[package]
+name = "xml2json"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "xml2json"
+crate-type = ["cdylib", "lib"]
+
+[dependencies]
+pyo3 = { version = "0.20", features = ["extension-module"] }
+quick-xml = "0.31"
+serde_json = "1.0"
+thiserror = "1.0"
