@@ -52,7 +52,7 @@ fn convert_reader<R: BufRead, W: Write>(
     mut writer: W,
 ) -> Result<(), X2JError> {
     let mut xml_reader = Reader::from_reader(reader);
-    xml_reader.trim_text(true);
+    xml_reader.config_mut().trim_text_end = true;
     let mut buf = Vec::with_capacity(4096);
 
     // Stack of (element_def, json_node) pairs being built

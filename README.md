@@ -34,6 +34,40 @@ uv pip install -e .
 
 This compiles the Rust code and installs the `xml2json` Python module.
 
+### Build a wheel using Docker
+
+A Docker-based build produces a self-contained `.whl` file for your local architecture without needing Rust or maturin installed on the host. By default it matches your system Python version (e.g. 3.12, 3.13, 3.14).
+
+Two build variants are available:
+
+| Variant | Dockerfile | Wheel type | Use case |
+|---|---|---|---|
+| `debian` (default) | `Dockerfile.debian` | `manylinux` | Standard glibc-based distros (Ubuntu, Debian, Fedora, ...) |
+| `alpine` | `Dockerfile.alpine` | `musllinux` | Alpine-based / musl environments |
+
+```bash
+# Build a manylinux wheel matching your system Python version (output goes to dist/)
+make build
+
+# Build a musllinux wheel instead
+make build VARIANT=alpine
+
+# Build for a specific Python version
+make build PYTHON_VERSION=3.13
+make build PYTHON_VERSION=3.14
+
+# Combine both options
+make build VARIANT=alpine PYTHON_VERSION=3.14
+```
+
+The resulting wheel will be in the `dist/` directory. To build and install into a local `.venv` in one step:
+
+```bash
+make install
+```
+
+This creates the venv if it doesn't exist, builds the wheel, and installs it.
+
 ### Build as a Rust library only
 
 ```bash

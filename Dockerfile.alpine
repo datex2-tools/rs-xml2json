@@ -1,0 +1,17 @@
+ARG PYTHON_VERSION=3.12
+FROM python:${PYTHON_VERSION}-alpine
+
+RUN apk add --no-cache \
+    rust \
+    cargo \
+    musl-dev \
+    gcc \
+    patchelf
+
+RUN pip install --no-cache-dir maturin
+
+ENV CARGO_TARGET_DIR=/tmp/build-target
+
+WORKDIR /app
+
+ENTRYPOINT ["maturin", "build", "--release", "--out", "/app/dist"]

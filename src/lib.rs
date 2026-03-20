@@ -69,7 +69,7 @@ fn convert_to_file(
     xsd_path: &str,
     output_path: &str,
 ) -> PyResult<()> {
-    py.allow_threads(|| {
+    py.detach(|| {
         let schema = parse_xsd(Path::new(xsd_path))?;
         walker::convert_file(Path::new(xml_path), &schema, Path::new(output_path))?;
         Ok::<(), X2JError>(())
@@ -132,7 +132,7 @@ fn convert_bytes_with_schema(xml_bytes: &[u8], schema: &Schema) -> PyResult<Stri
 }
 
 #[pymodule]
-fn xml2json(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
+fn xml2json(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<Schema>()?;
     m.add_function(wrap_pyfunction!(convert, m)?)?;
     m.add_function(wrap_pyfunction!(convert_to_file, m)?)?;

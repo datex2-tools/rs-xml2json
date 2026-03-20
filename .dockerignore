@@ -1,0 +1,7 @@
+target/
+dist/
+.venv/
+venv/
+.git/
+.idea/
+__pycache__/
