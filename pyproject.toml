@@ -7,5 +7,9 @@ name = "xml2json"
 version = "0.1.0"
 requires-python = ">=3.8"
 
+[project.scripts]
+xml2json = "xml2json.cli:main"
+
 [tool.maturin]
 features = ["pyo3/extension-module"]
+python-source = "python"

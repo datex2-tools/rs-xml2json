@@ -40,10 +40,10 @@ A Docker-based build produces a self-contained `.whl` file for your local archit
 
 Two build variants are available:
 
-| Variant | Dockerfile | Wheel type | Use case |
-|---|---|---|---|
+| Variant            | Dockerfile          | Wheel type  | Use case                                                   |
+|--------------------|---------------------|-------------|------------------------------------------------------------|
 | `debian` (default) | `Dockerfile.debian` | `manylinux` | Standard glibc-based distros (Ubuntu, Debian, Fedora, ...) |
-| `alpine` | `Dockerfile.alpine` | `musllinux` | Alpine-based / musl environments |
+| `alpine`           | `Dockerfile.alpine` | `musllinux` | Alpine-based / musl environments                           |
 
 ```bash
 # Build a manylinux wheel matching your system Python version (output goes to dist/)

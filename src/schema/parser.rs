@@ -1,7 +1,7 @@
 // Copyright 2026 Ernesto Ruge
 // Use of this source code is governed by an MIT-style license that can be found in the LICENSE.txt.
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -554,11 +554,14 @@ impl ParseContext {
 
         // 4. Resolve type references within named complex types (children referencing named types)
         let named_types_snapshot = self.model.named_types.clone();
-        for type_def in self.model.named_types.values_mut() {
-            Self::resolve_children_types(type_def, &named_types_snapshot, &type_refs);
+        for (type_name, type_def) in self.model.named_types.iter_mut() {
+            let mut resolving = HashSet::new();
+            resolving.insert(type_name.clone());
+            Self::resolve_children_types(type_def, &named_types_snapshot, &type_refs, &mut resolving);
         }
         for elem in self.model.elements.values_mut() {
-            Self::resolve_children_types(&mut elem.type_def, &named_types_snapshot, &type_refs);
+            let mut resolving = HashSet::new();
+            Self::resolve_children_types(&mut elem.type_def, &named_types_snapshot, &type_refs, &mut resolving);
         }
 
         self.model.target_namespace = self.target_namespace.clone();
@@ -569,17 +572,33 @@ impl ParseContext {
         type_def: &mut TypeDef,
         named_types: &HashMap<String, TypeDef>,
         type_refs: &HashMap<String, String>,
+        resolving: &mut HashSet<String>,
     ) {
         if let TypeDef::Complex(complex) = type_def {
             for child in &mut complex.children {
-                // Check if this child has a type ref
                 if let Some(type_name) = type_refs.get(&child.name.local_name) {
                     if let Some(resolved) = named_types.get(type_name) {
                         child.type_def = resolved.clone();
                     }
+                    // Only recurse if this type isn't already being expanded
+                    // (prevents infinite recursion on circular type references)
+                    if resolving.insert(type_name.clone()) {
+                        Self::resolve_children_types(
+                            &mut child.type_def,
+                            named_types,
+                            type_refs,
+                            resolving,
+                        );
+                        resolving.remove(type_name);
+                    }
+                } else {
+                    Self::resolve_children_types(
+                        &mut child.type_def,
+                        named_types,
+                        type_refs,
+                        resolving,
+                    );
                 }
-                // Recurse into children
-                Self::resolve_children_types(&mut child.type_def, named_types, type_refs);
             }
         }
     }

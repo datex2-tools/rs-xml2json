@@ -162,3 +162,25 @@ fn test_extension_unbounded_with_xsi_type() {
         &[serde_json::Value::String("treeAndVegetationCuttingWork".to_string())]
     );
 }
+
+#[test]
+fn test_datex2_circular_types() {
+    // The DATEX II schema has circular type references (e.g. SituationRecord <-> TrafficElement
+    // inheritance chains). This test verifies the parser doesn't stack-overflow on such schemas.
+    let xsd_path = Path::new("data/DATEXIISchema_2_2_3.xsd");
+    if !xsd_path.exists() {
+        return; // skip if test data not present
+    }
+    let schema = parse_xsd(xsd_path).expect("Failed to parse DATEX II XSD");
+
+    let xml_path = "data/roadworks_svzbw.datex2.xml";
+    if !Path::new(xml_path).exists() {
+        return;
+    }
+    let xml = std::fs::read_to_string(xml_path).expect("Failed to read XML");
+    let json_str = walker::convert_to_string(&xml, &schema).expect("Failed to convert");
+    let json: serde_json::Value = serde_json::from_str(&json_str).expect("Invalid JSON output");
+
+    // Root element should be d2LogicalModel
+    assert!(json["d2LogicalModel"].is_object());
+}
