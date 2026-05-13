@@ -3,8 +3,8 @@
 
 use std::path::Path;
 
-use xml2json::schema::parser::parse_xsd;
-use xml2json::converter::walker;
+use rs_xml2json::schema::parser::parse_xsd;
+use rs_xml2json::converter::walker;
 
 #[test]
 fn test_basic_conversion() {
@@ -134,7 +134,7 @@ fn test_extension_unbounded_with_xsi_type() {
         </situation>
     </root>"#;
 
-    let schema = xml2json::schema::parser::parse_xsd_from_str(xsd)
+    let schema = rs_xml2json::schema::parser::parse_xsd_from_str(xsd)
         .expect("Failed to parse XSD");
     let json_str = walker::convert_to_string(xml, &schema)
         .expect("Failed to convert");

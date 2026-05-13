@@ -5,11 +5,12 @@ __pycache__/
 *.egg-info/
 
 /target
+/target-test
 /dist
+*.jsom
 /venv
 /.venv
 /data
-/uv.lock
 
 /.idea
 .env

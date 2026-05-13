@@ -1,10 +1,11 @@
 [package]
-name = "xml2json"
-version = "0.1.0"
+name = "rs-xml2json"
+# Placeholder; CI overwrites this from the git tag on release (see .github/workflows/build.yml).
+version = "0.0.0"
 edition = "2021"
 
 [lib]
-name = "xml2json"
+name = "rs_xml2json"
 crate-type = ["cdylib", "lib"]
 
 [dependencies]

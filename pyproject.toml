@@ -3,12 +3,41 @@ requires = ["maturin>=1.0,<2.0"]
 build-backend = "maturin"
 
 [project]
-name = "xml2json"
-version = "0.1.0"
+name = "rs-xml2json"
+dynamic = ["version"]
+description = "Fast schema-aware XML-to-JSON converter written in Rust, with correct typing driven by XSD definitions."
+readme = "README.md"
 requires-python = ">=3.8"
+license = { file = "LICENCE.txt" }
+authors = [
+    { name = "Ernesto Ruge", email = "ernesto.ruge@binary-butterfly.de" },
+]
+keywords = ["xml", "json", "xsd", "schema", "converter", "rust", "pyo3"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Rust",
+    "Topic :: Text Processing :: Markup :: XML",
+    "Topic :: File Formats :: JSON",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.urls]
+Homepage = "https://github.com/datex2-tools/rs-xml2json"
+Repository = "https://github.com/datex2-tools/rs-xml2json"
+Issues = "https://github.com/datex2-tools/rs-xml2json/issues"
 
 [project.scripts]
-xml2json = "xml2json.cli:main"
+rs-xml2json = "rs_xml2json.cli:main"
 
 [tool.maturin]
 features = ["pyo3/extension-module"]

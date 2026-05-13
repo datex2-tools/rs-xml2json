@@ -38,7 +38,7 @@ impl Schema {
             .map_err(|e| X2JError::Io(format!("XSD is not valid UTF-8: {}", e)))?;
 
         let tmp_dir = std::env::temp_dir();
-        let xsd_tmp = tmp_dir.join("_xml2json_temp.xsd");
+        let xsd_tmp = tmp_dir.join("_rs_xml2json_temp.xsd");
         std::fs::write(&xsd_tmp, xsd_str)
             .map_err(|e| X2JError::Io(format!("Failed to write temp XSD: {}", e)))?;
 
@@ -88,7 +88,7 @@ fn convert_bytes(xml_bytes: &[u8], xsd_bytes: &[u8]) -> PyResult<String> {
 
     // Write XSD to a temp file so the parser can resolve relative imports
     let tmp_dir = std::env::temp_dir();
-    let xsd_tmp = tmp_dir.join("_xml2json_temp.xsd");
+    let xsd_tmp = tmp_dir.join("_rs_xml2json_temp.xsd");
     std::fs::write(&xsd_tmp, xsd_str)
         .map_err(|e| X2JError::Io(format!("Failed to write temp XSD: {}", e)))?;
 
@@ -132,7 +132,7 @@ fn convert_bytes_with_schema(xml_bytes: &[u8], schema: &Schema) -> PyResult<Stri
 }
 
 #[pymodule]
-fn xml2json(m: &Bound<'_, PyModule>) -> PyResult<()> {
+fn rs_xml2json(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<Schema>()?;
     m.add_function(wrap_pyfunction!(convert, m)?)?;
     m.add_function(wrap_pyfunction!(convert_to_file, m)?)?;

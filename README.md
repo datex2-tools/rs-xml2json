@@ -1,6 +1,7 @@
-# xml2json
+# rs-xml2json
 
 A high-performance XML-to-JSON converter written in Rust with Python bindings. It uses XSD schema definitions to produce correctly typed JSON output — integers, floats, booleans, and arrays are represented as their proper JSON types rather than treating everything as strings.
+
 
 ## Features
 
@@ -13,12 +14,14 @@ A high-performance XML-to-JSON converter written in Rust with Python bindings. I
 - **`xsi:type` support**: Overrides element types dynamically based on `xsi:type` attributes
 - **Python bindings via PyO3**: Use directly from Python as a native module
 
+
 ## Requirements
 
 - Rust (edition 2021)
 - Python >= 3.8
 - [maturin](https://github.com/PyO3/maturin) (for building the Python package)
 - [uv](https://github.com/astral-sh/uv) (optional, for managing the Python environment)
+
 
 ## Installation
 
@@ -32,7 +35,8 @@ maturin develop --release
 uv pip install -e .
 ```
 
-This compiles the Rust code and installs the `xml2json` Python module.
+This compiles the Rust code and installs the `rs_xml2json` Python module.
+
 
 ### Build a wheel using Docker
 
@@ -68,22 +72,26 @@ make install
 
 This creates the venv if it doesn't exist, builds the wheel, and installs it.
 
+
 ### Build as a Rust library only
 
 ```bash
 cargo build --release
 ```
 
+
 ## Usage
 
 ### Python API
 
 ```python
-from xml2json import Schema, convert, convert_to_file, convert_bytes, \
+from rs_xml2json import Schema, convert, convert_to_file, convert_bytes, \
     convert_with_schema, convert_to_file_with_schema, convert_bytes_with_schema
 ```
 
+
 #### One-shot conversion (parses XSD each time)
+
 
 ```python
 # Convert XML file to JSON string
@@ -99,7 +107,7 @@ json_string = convert_bytes(xml_bytes, xsd_bytes)
 #### Pre-parsed schema (recommended for multiple conversions)
 
 ```python
-from xml2json import Schema
+from rs_xml2json import Schema
 
 # Parse the schema once
 schema = Schema.from_file("schema.xsd")
@@ -111,6 +119,7 @@ json_string = convert_with_schema("data.xml", schema)
 convert_to_file_with_schema("data.xml", schema, "output.json")
 json_string = convert_bytes_with_schema(xml_bytes, schema)
 ```
+
 
 ### Example
 
@@ -174,16 +183,18 @@ The output JSON will be:
 
 Note that `item` is always an array (because the schema declares `maxOccurs="unbounded"`), and numeric/boolean values are properly typed.
 
+
 ## JSON mapping conventions
 
-| XML construct | JSON representation |
-|---|---|
-| Element with simple type | Value (string, number, boolean) |
-| Element with complex type | Object |
-| Element with `maxOccurs > 1` | Array (even with a single item) |
-| Attribute | Key prefixed with `@` (e.g., `@id`) |
-| Mixed content text | `_text` key |
-| Empty element | `null` |
+| XML construct                | JSON representation                 |
+|------------------------------|-------------------------------------|
+| Element with simple type     | Value (string, number, boolean)     |
+| Element with complex type    | Object                              |
+| Element with `maxOccurs > 1` | Array (even with a single item)     |
+| Attribute                    | Key prefixed with `@` (e.g., `@id`) |
+| Mixed content text           | `_text` key                         |
+| Empty element                | `null`                              |
+
 
 ## Running tests
 
@@ -208,7 +219,7 @@ cargo test
 │       ├── mod.rs
 │       └── walker.rs       # XML → JSON conversion engine
 ├── python/
-│   └── xml2json/
+│   └── rs_xml2json/
 │       └── __init__.py     # Python package re-exports
 ├── tests/
 │   ├── integration_test.rs # Rust integration tests
