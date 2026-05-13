@@ -9,16 +9,13 @@ on:
   workflow_dispatch:
     inputs:
       repository_url:
-        description: "PyPI repository URL to publish to"
+        description: "Override PyPI repository URL (leave blank to use the environment's PYPI_REPOSITORY_URL variable, or fall back to PyPI prod)"
         required: false
-        default: "https://upload.pypi.org/legacy/"
+        default: ""
         type: string
 
 permissions:
   contents: read
-
-env:
-  PYPI_REPOSITORY_URL: ${{ inputs.repository_url || 'https://upload.pypi.org/legacy/' }}
 
 jobs:
   test:
@@ -178,5 +175,5 @@ jobs:
       - name: Publish to PyPI
         env:
           UV_PUBLISH_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
-          UV_PUBLISH_URL: ${{ env.PYPI_REPOSITORY_URL }}
+          UV_PUBLISH_URL: ${{ inputs.repository_url || vars.PYPI_REPOSITORY_URL || 'https://upload.pypi.org/legacy/' }}
         run: uv publish dist/*
