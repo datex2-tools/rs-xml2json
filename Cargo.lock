@@ -125,7 +125,7 @@ dependencies = [
 
 [[package]]
 name = "rs-xml2json"
-version = "0.1.1+g87108c1.dirty"
+version = "0.1.1"
 dependencies = [
  "pyo3",
  "quick-xml",

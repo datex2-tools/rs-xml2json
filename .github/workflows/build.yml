@@ -3,7 +3,8 @@ name: Build wheels
 on:
   push:
     tags:
-      - "v*"
+      - "[0-9]+.[0-9]+.[0-9]+"
+      - "[0-9]+.[0-9]+.[0-9]+-*"
   pull_request:
   workflow_dispatch:
     inputs:
@@ -17,7 +18,7 @@ permissions:
   contents: read
 
 env:
-  REPOSITORY_URL: ${{ inputs.repository_url || 'https://upload.pypi.org/legacy/' }}
+  PYPI_REPOSITORY_URL: ${{ inputs.repository_url || 'https://upload.pypi.org/legacy/' }}
 
 jobs:
   test:
@@ -51,7 +52,7 @@ jobs:
       - name: Set version from tag
         shell: bash
         run: |
-          VERSION="${GITHUB_REF_NAME#v}"
+          VERSION="${GITHUB_REF_NAME}"
           echo "Setting version to $VERSION"
           sed -i.bak "0,/^version = \".*\"$/s//version = \"$VERSION\"/" Cargo.toml
           rm Cargo.toml.bak
@@ -86,7 +87,7 @@ jobs:
       - name: Set version from tag
         shell: bash
         run: |
-          VERSION="${GITHUB_REF_NAME#v}"
+          VERSION="${GITHUB_REF_NAME}"
           echo "Setting version to $VERSION"
           sed -i.bak "0,/^version = \".*\"$/s//version = \"$VERSION\"/" Cargo.toml
           rm Cargo.toml.bak
@@ -121,7 +122,7 @@ jobs:
       - name: Set version from tag
         shell: bash
         run: |
-          VERSION="${GITHUB_REF_NAME#v}"
+          VERSION="${GITHUB_REF_NAME}"
           echo "Setting version to $VERSION"
           sed -i.bak "0,/^version = \".*\"$/s//version = \"$VERSION\"/" Cargo.toml
           rm Cargo.toml.bak
@@ -145,7 +146,7 @@ jobs:
       - name: Set version from tag
         shell: bash
         run: |
-          VERSION="${GITHUB_REF_NAME#v}"
+          VERSION="${GITHUB_REF_NAME}"
           echo "Setting version to $VERSION"
           sed -i.bak "0,/^version = \".*\"$/s//version = \"$VERSION\"/" Cargo.toml
           rm Cargo.toml.bak
@@ -165,8 +166,6 @@ jobs:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     needs: [linux, macos, windows, sdist]
-    permissions:
-      id-token: write
     environment: pypi
     steps:
       - uses: actions/download-artifact@v4
@@ -176,6 +175,8 @@ jobs:
           path: dist
       - name: Publish to PyPI
         uses: PyO3/maturin-action@v1
+        env:
+          MATURIN_PYPI_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
         with:
           command: upload
-          args: --non-interactive --skip-existing --repository-url ${{ env.REPOSITORY_URL }} dist/*
+          args: --non-interactive --skip-existing --repository-url ${{ env.PYPI_REPOSITORY_URL }} dist/*
