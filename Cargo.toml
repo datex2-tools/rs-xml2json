@@ -9,7 +9,7 @@ name = "rs_xml2json"
 crate-type = ["cdylib", "lib"]
 
 [dependencies]
-pyo3 = { version = "0.28", features = ["extension-module"] }
+pyo3 = { version = "0.28", features = ["extension-module", "abi3-py38"] }
 quick-xml = "0.37"
 serde_json = "1.0"
 thiserror = "2.0"
